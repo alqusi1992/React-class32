@@ -1,63 +1,42 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import DataProfile from "./DataProfile";
 
 function WeatherData() {
-  const [country, setCountry] = useState("");
-  const [stad, setStad] = useState("");
-  const [city, setCity] = useState("");
-  const [timezone, setTimezone] = useState("");
-  const [population, setPopulation] = useState("");
-  const [location, setLocation] = useState("");
-  const [tmep_max, setTmep_max] = useState("");
-  const [tmep_min, setTmep_min] = useState("");
+  const [query, setQuery] = useState("");
+  const [weather, setWeather] = useState({});
 
-  const getWeatherData = (city) => {
-    axios(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city},&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`
+  const search = () => {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${query},&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`
     )
-      .then((response) => {
-        setStad(response.data.city.name);
-        setCountry(response.data.city.country);
-        setTimezone(response.data.city.timezone);
-        setPopulation(response.data.city.population);
-        setLocation(response.data.city.sunset);
-        setTmep_max({ response: response.data.list[0] });
-        setTmep_min({ response: response.data.list[0] });
-      })
-      .catch((error) => {
-        console.log(error);
+      .then((res) => res.json())
+      .then((result) => {
+        setWeather(result.city);
       });
   };
 
-  useEffect(() => {
-    getWeatherData();
-  }, []);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    search();
+    setWeather("");
+  };
   return (
-    <>
-      <input
-        type="text"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
-      <button
-        className="btn"
-        onClick={() => {
-          getWeatherData(city);
-        }}
-      >
-        Search
-      </button>
-      <DataProfile
-        country={country}
-        stad={stad}
-        timezone={timezone}
-        population={population}
-        location={location}
-        tmep_max={tmep_max}
-        tmep_min={tmep_min}
-      />
-    </>
+    <div>
+      <main>
+        <form onSubmit={submitHandler}>
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={(e) => setQuery(e.target.value)}
+            value={query}
+          />
+          <DataProfile weather={weather} />
+          <button className="btn" type="submit">
+            Search
+          </button>
+        </form>
+      </main>
+    </div>
   );
 }
 
