@@ -1,39 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DataProfile from "./DataProfile";
 
 function WeatherData() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
 
-  const search = () => {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${query},&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`
-    )
-      .then((res) => res.json())
-      .then((result) => {
-        setWeather(result.city);
-      });
+  const getWeatherData = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${query},&appid=${process.env.REACT_APP_OPENWEATHERMAP_API_KEY}`
+      );
+      const weatherData = await response.json();
+      setWeather(weatherData);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    search();
-    setWeather("");
-  };
   return (
     <div>
       <main>
-        <form onSubmit={submitHandler}>
+        <form onSubmit={getWeatherData}>
           <input
             type="text"
             placeholder="Search..."
             onChange={(e) => setQuery(e.target.value)}
             value={query}
           />
-          <DataProfile weather={weather} />
-          <button className="btn" type="submit">
-            Search
-          </button>
+
+          {Object.entries(weather).length !== 0 ? (
+            <DataProfile weather={weather} />
+          ) : (
+            <h3> Please Enter City Name </h3>
+          )}
+          <button className="btn">Search</button>
         </form>
       </main>
     </div>
