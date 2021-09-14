@@ -1,6 +1,8 @@
-import React from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-function DataProfile({ weather }) {
+function DataProfile({ weather, setWeather, item }) {
+  const id = weather.city.id;
   const cityName = weather.city.name;
   const countryName = weather.city.country;
   const minTemp = weather.list[0].main.temp_min;
@@ -8,11 +10,20 @@ function DataProfile({ weather }) {
   const weatherDesc = weather.list[0].weather[0].description;
   const weatherMain = weather.list[0].weather[0].main;
 
+  const removeCity = () => {
+    setWeather({});
+  };
+
   return (
     <div>
       <div className="list">
+        <span onClick={removeCity} className="remove-city">
+          x
+        </span>
         <p>
-          {cityName} {countryName}
+          <Link to={`/${id}`}>
+            {cityName} {countryName}
+          </Link>
         </p>
         <p>MaxTemp : {maxTemp}</p>
         <p>MinTemp: {minTemp}</p>
