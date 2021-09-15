@@ -30,10 +30,10 @@ function WeatherData() {
             value={query}
           />
 
-          {Object.entries(weather).length !== 0 ? (
-            <DataProfile weather={weather} />
+          {weather.cod === "200" ? (
+            <DataProfile weather={weather} setWeather={setWeather} />
           ) : (
-            <h3> Please Enter City Name </h3>
+            <p> Please Enter City Name</p>
           )}
           <button className="btn">Search</button>
         </form>
