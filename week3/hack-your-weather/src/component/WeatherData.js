@@ -40,14 +40,10 @@ function WeatherData() {
           />
           <button className="btn">Search</button>
 
-          {Object.entries(weather).length !== 0 ? (
-            <DataProfile
-              weather={weather}
-              setWeather={setWeather}
-              item={weather}
-            />
+         {weather.cod === "200" ? (
+            <DataProfile weather={weather} setWeather={setWeather} />
           ) : (
-            <h3> Please Enter City Name </h3>
+            <p> Please Enter City Name</p>
           )}
         </form>
       </main>
