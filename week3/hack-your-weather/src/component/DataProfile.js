@@ -1,35 +1,31 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function DataProfile({ weather, setWeather, item }) {
-  const id = weather.city.id;
-  const cityName = weather.city.name;
-  const countryName = weather.city.country;
-  const minTemp = weather.list[0].main.temp_min;
-  const maxTemp = weather.list[0].main.temp_max;
-  const weatherDesc = weather.list[0].weather[0].description;
-  const weatherMain = weather.list[0].weather[0].main;
-
+function DataProfile({ weather, setWeather }) {
   const removeCity = () => {
     setWeather({});
   };
 
   return (
     <div>
-      <div className="list">
-        <span onClick={removeCity} className="remove-city">
-          x
-        </span>
-        <p>
-          <Link to={`/${id}`}>
-            {cityName} {countryName}
-          </Link>
-        </p>
-        <p>MaxTemp : {maxTemp}</p>
-        <p>MinTemp: {minTemp}</p>
-        <p>Description: {weatherDesc}</p>
-        <p>WeatherMain:{weatherMain}</p>
-      </div>
+      {weather.map((item) => {
+        return (
+          <div className="list">
+            <span onClick={removeCity} className="remove-city">
+              x
+            </span>
+            <p>
+              <Link to={`/${item.city.id}`}>
+                {item.city.name} {item.city.country}
+              </Link>
+            </p>
+            <p>MaxTemp : {item.list[0].main.temp_max}</p>
+            <p>MinTemp: {item.list[0].main.temp_min}</p>
+            <p>Description: {item.list[0].weather[0].description}</p>
+            <p>WeatherMain:{item.list[0].weather[0].main}</p>
+          </div>
+        );
+      })}
+      <main></main>
     </div>
   );
 }
