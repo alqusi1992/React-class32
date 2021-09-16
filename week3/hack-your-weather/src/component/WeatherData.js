@@ -3,7 +3,7 @@ import DataProfile from "./DataProfile";
 
 function WeatherData() {
   const [query, setQuery] = useState("");
-  const [weather, setWeather] = useState({});
+  const [weather, setWeather] = useState([]);
 
   useEffect(() => {}, [weather]);
 
@@ -18,7 +18,7 @@ function WeatherData() {
       );
       const weatherData = await response.json();
 
-      setWeather({ ...weatherData });
+      setWeather((weather) => [...weather, weatherData]);
     } catch (err) {
       console.log(err);
     }
@@ -40,14 +40,13 @@ function WeatherData() {
           />
           <button className="btn">Search</button>
 
-         {weather.cod === "200" ? (
+          {Object.entries(weather).length !== 0 ? (
             <DataProfile weather={weather} setWeather={setWeather} />
           ) : (
-            <p> Please Enter City Name</p>
+            <h3> Please Enter City Name </h3>
           )}
         </form>
       </main>
-      <pre></pre>
     </div>
   );
 }
